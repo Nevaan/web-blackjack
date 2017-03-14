@@ -10,6 +10,8 @@ Used technologies:
 - Typescript, 
 - Phaser,
 - Yeoman,
+- Karma,
+- Jasmine,
 - to be continued ... 
 
 Project was initialized with Yeoman Phaser Typescript template (https://github.com/rcolinray/generator-phaser-typescript).
