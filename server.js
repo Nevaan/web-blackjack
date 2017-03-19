@@ -5,16 +5,14 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var appPath = __dirname + '/build/';
 
-app.use(express.static(appPath));
-app.use("/styles", express.static(appPath + 'styles'));
-app.use("/images", express.static(appPath + 'assets/images'));
-app.use("/scripts", express.static(appPath + 'js'));
+app.use(express.static(__dirname));
+app.use("/styles", express.static(__dirname + '/styles'));
+app.use("/images", express.static(__dirname + '/assets/images'));
+app.use("/scripts", express.static(__dirname + '/js'));
 
-// viewed at based directory http://localhost:8080/
 app.get('/', function (req, res) {
-    res.sendFile(path.join(appPath+ 'index.html'));
+    res.sendFile(path.join(__dirname+ '/index.html'));
 });
 
 app.listen(process.env.PORT || 8080);

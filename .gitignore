@@ -5,3 +5,5 @@ app/vendor/*
 .DS_Store
 *.d.ts
 typings/*
+*.log
+*.orig
