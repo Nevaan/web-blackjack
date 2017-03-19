@@ -1,8 +1,12 @@
 {
   "name": "web-blackjack",
   "version": "0.0.0",
+  "scripts": {
+    "start" : "node server.js"
+  },
   "dependencies": {
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "requirejs": "^2.3.3"
   },
   "devDependencies": {
     "connect-livereload": "^0.3.2",
