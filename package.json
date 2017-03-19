@@ -2,7 +2,7 @@
   "name": "web-blackjack",
   "version": "0.0.0",
   "scripts": {
-    "postinstall": "grpostinstallunt build",
+    "postinstall": "grunt build",
     "start" : "node server.js"
   },
   "engines": {
