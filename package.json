@@ -2,7 +2,7 @@
   "name": "web-blackjack",
   "version": "0.0.0",
   "scripts": {
-    "postinstall": "grunt build; typings install dt~jasmine --save",
+    "postinstall": "grunt build; typings install dt~jasmine --save --global",
     "start": "node server.js"
   },
   "engines": {
