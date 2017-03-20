@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.initConfig({
@@ -36,6 +37,16 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        less: {
+          app: {
+              options: {
+                  paths: 'app/styles'
+              },
+              files: {
+                  'build/styles/style.css': 'app/styles/*.less'
+              }
+          }
+        },
         open: {
             app: {
                 path: 'http://localhost:8080'
@@ -66,6 +77,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['typescript', 'copy', 'open', 'connect', 'watch']);
-    grunt.registerTask('build', ['typescript', 'copy', 'karma']);
+    grunt.registerTask('default', ['typescript', 'copy', 'less', 'open', 'connect', 'watch']);
+    grunt.registerTask('build', ['typescript', 'copy', 'less','karma']);
 }
