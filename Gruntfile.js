@@ -64,7 +64,7 @@ module.exports = function (grunt) {
         watch: {
             app: {
                 files: 'app/**/*',
-                tasks: ['typescript', 'copy'],
+                tasks: ['typescript', 'less',   'copy'],
                 options: {
                     livereload: true
                 }
