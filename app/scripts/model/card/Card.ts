@@ -1,45 +1,41 @@
 
-export const Colours: String[] = [
+export const Colours: string[] = [
     'HEARTS',
     'DIAMONDS',
     'CLUBS',
     'SPADES'
 ]
 
-export enum Ranks {
-    ACE,
-    KING,
-    QUEEN,
-    JACK,
-    TEN,
-    NINE,
-    EIGHT,
-    SEVEN,
-    SIX,
-    FIVE,
-    FOUR,
-    THREE,
-    TWO
-}
-
 export const RankValues = {
-    [Ranks.ACE]: NaN,
-    [Ranks.KING] : 10,
-    [Ranks.QUEEN] : 10,
-    [Ranks.JACK] : 10,
-    [Ranks.TEN] : 10,
-    [Ranks.NINE] : 9,
-    [Ranks.EIGHT] : 8,
-    [Ranks.SEVEN] : 7,
-    [Ranks.SIX] : 6,
-    [Ranks.FIVE] : 5,
-    [Ranks.FOUR] : 4,
-    [Ranks.THREE] : 3,
-    [Ranks.TWO] : 2
-
+    "ACE":   NaN,
+    "KING":  10,
+    "QUEEN": 10,
+    "JACK":  10,
+    "TEN":   10,
+    "NINE":   9,
+    "EIGHT":  8,
+    "SEVEN":  7,
+    "SIX":    6,
+    "FIVE":   5,
+    "FOUR":   4,
+    "THREE":  3,
+    "TWO":    2
 }
 
-export interface Card {
-    colour: String;
-    rank: Ranks;
+export class Card {
+
+    get colour() {
+        return this._colour;
+    }
+
+    get rank() {
+        return this._rank;
+    }
+
+    constructor(private _colour: String, private _rank: String) {
+    }
+
+    public getCardValue() {
+        return RankValues[this.rank];
+    }
 }
