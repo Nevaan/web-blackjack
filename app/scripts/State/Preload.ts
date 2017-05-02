@@ -11,6 +11,7 @@ module WebBlackjack.State {
       // Load remaining assets here
       this.load.spritesheet('startButton', 'assets/images/buttons/start_button.png', 200, 40);
       this.load.spritesheet('optionsButton', 'assets/images/buttons/options_button.png', 200, 40);
+      this.load.spritesheet('backButton', 'assets/images/buttons/back_button.png', 110, 35);
     }
 
     create() {
