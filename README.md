@@ -14,7 +14,8 @@ Used technologies:
 - Karma,
 - Jasmine,
 - Node.js,
-- Express
+- Express,
+- Google Web Fonts,
 - to be continued ... 
 
 Project was initialized with Yeoman Phaser Typescript template (https://github.com/rcolinray/generator-phaser-typescript).

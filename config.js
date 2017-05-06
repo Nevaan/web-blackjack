@@ -14,6 +14,5 @@ System.config({
        }
    },
     map: {
-
     }
 });

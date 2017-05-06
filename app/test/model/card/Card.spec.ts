@@ -23,4 +23,5 @@ describe("Card test", () =>  {
         card = new Card("CLUBS", "ACE");
         expect(card.getCardValue()).toBeNaN();
     });
-})
+
+});

@@ -1,12 +1,13 @@
 import { CardSet } from "../../../scripts/model/set/CardSet";
 import {Card, RankValues} from "../../../scripts/model/card/Card";
+import * as _ from "lodash";
 
 describe("CardSet test", () =>  {
 
     let cardSet: CardSet;
 
     beforeEach(() => {
-        cardSet = new CardSet();
+        cardSet = new CardSet([]);
     });
 
     it("should create full card set", () => {
@@ -33,4 +34,13 @@ describe("CardSet test", () =>  {
             expect(rankSet.length).toEqual(4);
         }
     });
+
+    it("should draw card and remove it from card set", () => {
+        let drawnCard: Card = cardSet.drawCard();
+        let isCardInSet: Card | undefined = _.find(cardSet.cards, function(card)  {return (card === drawnCard);});
+        expect(cardSet.cards.length).toEqual(51);
+        expect(isCardInSet).toBeUndefined();
+    });
+
+
 })

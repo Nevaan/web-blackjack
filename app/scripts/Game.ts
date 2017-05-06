@@ -1,10 +1,10 @@
 /// <reference path="../vendor/phaser-official/typescript/phaser.d.ts"/>
 
-/// <reference path='State/Boot.ts'/>
-/// <reference path='State/Preload.ts'/>
-/// <reference path='State/Menu.ts'/>
-/// <reference path='State/Main.ts'/>
-/// <reference path='State/Options.ts'/>
+/// <reference path='state/Boot.ts'/>
+/// <reference path='state/Preload.ts'/>
+/// <reference path='state/Menu.ts'/>
+/// <reference path='state/Main.ts'/>
+/// <reference path='state/Options.ts'/>
 
 module WebBlackjack {
   export class Game extends Phaser.Game {

@@ -24,18 +24,17 @@ export const RankValues = {
 
 export class Card {
 
+    constructor(private _colour: String, private _rank: String) { };
+
     get colour() {
         return this._colour;
-    }
+    };
 
     get rank() {
         return this._rank;
-    }
-
-    constructor(private _colour: String, private _rank: String) {
-    }
+    };
 
     public getCardValue() {
         return RankValues[this.rank];
-    }
+    };
 }

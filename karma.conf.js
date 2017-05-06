@@ -15,7 +15,8 @@ module.exports = function (config) {
         files: [
             {pattern: 'app/**/*.ts', included: false, watched: true},
             {pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: true, watched: true},
-            'app/test/**/*.spec.ts',
+            'node_modules/lodash/lodash.js',
+            'app/test/**/*.spec.ts'
         ],
         systemjs: {
             configFile: './karma.system.conf.js',
