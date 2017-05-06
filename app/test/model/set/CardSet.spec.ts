@@ -37,10 +37,14 @@ describe("CardSet test", () =>  {
 
     it("should draw card and remove it from card set", () => {
         let drawnCard: Card = cardSet.drawCard();
-        let isCardInSet: Card | undefined = _.find(cardSet.cards, function(card)  {return (card === drawnCard);});
+        let isCardInSet: Card | undefined = _.find(cardSet.cards, (card) =>  {return (card === drawnCard);});
         expect(cardSet.cards.length).toEqual(51);
         expect(isCardInSet).toBeUndefined();
     });
 
-
-})
+    it("should return undefined if card set is empty", () => {
+        _.times(52, () => cardSet.drawCard());
+        expect(cardSet.cards.length).toEqual(0);
+        expect(cardSet.drawCard()).toBeUndefined();
+    });
+});
