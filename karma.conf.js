@@ -13,7 +13,7 @@ module.exports = function (config) {
             "karma-phantomjs-launcher"
         ],
         files: [
-            {pattern: 'app/**/*.ts', included: false, watched: true},
+            {pattern: 'app/scripts/**/*.ts', included: false, watched: true},
             {pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: true, watched: true},
             'node_modules/lodash/lodash.js',
             'app/test/**/*.spec.ts'

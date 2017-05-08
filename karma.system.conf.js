@@ -1,7 +1,6 @@
     System.config({
         paths: {
             'systemjs': 'node_modules/systemjs/dist/system.js',
-            'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js',
             'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.js',
             'jasmine': 'node_modules/karma-jasmine/*',
             typescript: 'node_modules/typescript/lib/typescript.js',
@@ -11,10 +10,8 @@
         },
         map: {
             'systemjs': 'node_modules/systemjs/dist/system.js',
-            'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js',
             'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.js',
             lodash: 'node_modules/lodash/lodash.js'
-
         },
         meta: {
             '*.ts': {
