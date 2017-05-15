@@ -6,11 +6,6 @@
 /// <reference path='state/Main.ts'/>
 /// <reference path='state/Options.ts'/>
 
-let WebFontConfig = {
-  google: {
-    families: ['Bree Serif']
-  }
-}
 
 module WebBlackjack {
   export class Game extends Phaser.Game {

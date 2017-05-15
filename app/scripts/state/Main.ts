@@ -17,13 +17,13 @@ module WebBlackjack.State {
     }
 
     createText() {
-      this.currentBalanceText = this.add.text(this.world.width - 300, this.world.height - 140, "Your balance: $ " + this.currentBalance, { font: "30px Bree Serif"});
+      this.currentBalanceText = this.add.text(this.world.width - 300, this.world.height - 140, "Your balance: $ " + this.currentBalance, { font: "30px bree"});
       this.currentBalanceText.anchor.setTo(0);
 
       this.currentBalanceText.fill = '#daa520';
       this.currentBalanceText.align = 'center';
 
-      this.currentBetText = this.add.text(this.world.width - 280, this.world.height - 105, "Current bet: $ " + this.currentBet, { font: "30px Bree Serif"});
+      this.currentBetText = this.add.text(this.world.width - 280, this.world.height - 105, "Current bet: $ " + this.currentBet, { font: "30px bree"});
       this.currentBetText.anchor.setTo(0);
 
       this.currentBetText.fill = '#daa520';
