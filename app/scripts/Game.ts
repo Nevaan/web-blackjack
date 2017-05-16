@@ -5,7 +5,11 @@
 /// <reference path='state/Menu.ts'/>
 /// <reference path='state/Main.ts'/>
 /// <reference path='state/Options.ts'/>
-
+/// <reference path="./model/player/Player.ts"/>
+/// <reference path="./model/card/Card.ts"/>
+/// <reference path="./model/set/CardSet.ts"/>
+/// <reference path="./model/token/Token.ts"/>
+/// <reference path="./model/token/TokenValue.ts"/>
 
 module WebBlackjack {
   export class Game extends Phaser.Game {

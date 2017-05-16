@@ -13,6 +13,8 @@ module.exports = function (grunt) {
                 src: ['app/scripts/Game.ts'],
                 dest: 'build/js/main.js',
                 options: {
+                    target: 'es5',
+                    module: 'amd',
                     sourceMap: true
                 }
             }

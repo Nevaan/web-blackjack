@@ -7,3 +7,4 @@ app/vendor/*
 typings/*
 *.log
 *.orig
+app/scripts/**/*.js*

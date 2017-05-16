@@ -1,10 +1,19 @@
 module WebBlackjack.State {
+  import Player = WebBlackjack.Model.Player;
+
   export class Main extends Phaser.State {
+    player: Player;
     currentBet: number = 0;
     currentBalance: number = 0;
     backButton: Phaser.Button;
     currentBalanceText: Phaser.Text;
     currentBetText: Phaser.Text;
+
+
+    init() {
+      this.player = new Player();
+      this.player.testMethod(3);
+    }
 
     create() {
       this.stage.backgroundColor = 0x000000;
