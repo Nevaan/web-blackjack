@@ -6,17 +6,23 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-remove');
 
     grunt.initConfig({
         typescript: {
             app: {
-                src: ['app/scripts/Game.ts'],
-                dest: 'build/js/main.js',
+                src: ['app/scripts/**/*.ts'],
+                dest: 'build/js',
                 options: {
                     target: 'es5',
                     module: 'amd',
                     sourceMap: true
                 }
+            }
+        },
+        remove: {
+            main: {
+                dirList: ['build/']
             }
         },
         copy: {
@@ -79,6 +85,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['typescript', 'copy', 'less', 'open', 'connect', 'watch']);
-    grunt.registerTask('build', ['typescript', 'copy', 'less','karma']);
+    grunt.registerTask('default', ['remove','typescript', 'copy', 'less', 'open', 'connect', 'watch']);
+    grunt.registerTask('build', ['remove','typescript', 'copy', 'less','karma']);
 }

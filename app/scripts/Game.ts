@@ -1,33 +1,25 @@
 /// <reference path="../vendor/phaser-official/typescript/phaser.d.ts"/>
 
-/// <reference path='state/Boot.ts'/>
-/// <reference path='state/Preload.ts'/>
-/// <reference path='state/Menu.ts'/>
-/// <reference path='state/Main.ts'/>
-/// <reference path='state/Options.ts'/>
-/// <reference path="./model/player/Player.ts"/>
-/// <reference path="./model/card/Card.ts"/>
-/// <reference path="./model/set/CardSet.ts"/>
-/// <reference path="./model/token/Token.ts"/>
-/// <reference path="./model/token/TokenValue.ts"/>
+import State = Phaser.State;
+import {Preload} from "./state/Preload";
+import {Menu} from "./state/Menu";
+import {Main} from "./state/Main";
+import {Options} from "./state/Options";
+import {Boot} from "./state/Boot";
 
-module WebBlackjack {
-  export class Game extends Phaser.Game {
-
+export class Game extends Phaser.Game {
     constructor() {
-      super(800, 600, Phaser.AUTO, "game-content");
+        super(800, 600, Phaser.AUTO, "game-content");
 
-      this.state.add('boot', State.Boot);
-      this.state.add('preload', State.Preload);
-      this.state.add('menu', State.Menu);
-      this.state.add('main', State.Main);
-      this.state.add('options', State.Options);
-
-      this.state.start('boot');
+        this.state.add('boot', Boot);
+        this.state.add('preload', Preload);
+        this.state.add('menu', Menu);
+        this.state.add('main', Main);
+        this.state.add('options', Options);
+        this.state.start('boot');
     }
-  }
 }
 
 window.onload = () => {
-  var game = new WebBlackjack.Game();
+    var game = new Game();
 }
