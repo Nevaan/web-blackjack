@@ -7,6 +7,7 @@ import {Main} from "./state/Main";
 import {Options} from "./state/Options";
 import {Boot} from "./state/Boot";
 
+
 export class Game extends Phaser.Game {
     constructor() {
         super(800, 600, Phaser.AUTO, "game-content");

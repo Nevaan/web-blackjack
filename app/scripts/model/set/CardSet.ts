@@ -2,6 +2,7 @@ import {Card, Colours, RankValues} from "../card/Card";
 declare var _: any;
 
 export class CardSet {
+
     constructor(private _cards: Card[]) {
         _.forEach(Colours, (colour) => {
             for (let rank in RankValues) {

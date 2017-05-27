@@ -5,10 +5,6 @@ export class Main extends Phaser.State {
     currentBalanceText: Phaser.Text;
     currentBetText: Phaser.Text;
 
-
-    init() {
-    }
-
     create() {
         this.stage.backgroundColor = 0x000000;
         this.backButton = this.add.button(30, 30, 'backButton', this.backToMenu, this, 2, 1, 0);
