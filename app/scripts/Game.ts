@@ -1,26 +1,87 @@
-/// <reference path="../vendor/phaser-official/typescript/phaser.d.ts"/>
+module WebBlackjack {
+    export class Game {
+        game: Phaser.Game
 
-import State = Phaser.State;
-import {Preload} from "./state/Preload";
-import {Menu} from "./state/Menu";
-import {Main} from "./state/Main";
-import {Options} from "./state/Options";
-import {Boot} from "./state/Boot";
+        constructor() {
+            this.game = new Phaser.Game(800, 600, Phaser.WEBGL, "game-content");
 
+            this.game.state.add('boot', Boot, false);
+            this.game.state.add('preload', Preload, false);
+            this.game.state.add('menu', Menu, false);
+            this.game.state.add('main', Main, false);
+            this.game.state.add('options', Options, false);
 
-export class Game extends Phaser.Game {
-    constructor() {
-        super(800, 600, Phaser.AUTO, "game-content");
-
-        this.state.add('boot', Boot);
-        this.state.add('preload', Preload);
-        this.state.add('menu', Menu);
-        this.state.add('main', Main);
-        this.state.add('options', Options);
-        this.state.start('boot');
+            this.game.state.start('boot', true, true);
+        }
     }
 }
 
 window.onload = () => {
-    var game = new Game();
+    var game = new WebBlackjack.Game();
 }
+
+/*
+ module GameFromScratch {
+ export class TitleScreenState extends Phaser.State {
+ game: Phaser.Game;
+
+ constructor() {
+ super();
+ }
+
+ titleScreenImage: Phaser.Sprite;
+
+ preload() {
+ this.load.image("title", "TitleScreen.png");
+ }
+
+ create() {
+ this.titleScreenImage = this.add.sprite(0, 0, "title");
+ this.input.onTap.addOnce(this.titleClicked, this); // <-- that um, this is extremely important
+ }
+
+ titleClicked() {
+ this.game.state.start("GameRunningState");
+ }
+ }
+
+ export class GameRunningState extends Phaser.State {
+ constructor() {
+ super();
+ }
+
+ textValue: Phaser.Text;
+ updateCount: number;
+
+ create() {
+ var style = {font: "65px Arial", fill: "#ff0000", align: "center"};
+ this.textValue = this.game.add.text(0, 0, "0", style);
+ this.updateCount = 0;
+ }
+
+ update() {
+ this.textValue.text = (this.updateCount++).toString();
+ }
+
+ render() {
+ this.game.debug.text("This is drawn in render()", 0, 80);
+ }
+ }
+
+ export class SimpleGame {
+ game: Phaser.Game;
+
+ constructor() {
+ this.game = new Phaser.Game(800, 600, Phaser.WEBGL, 'game-content');
+
+ this.game.state.add("GameRunningState", GameRunningState, false);
+ this.game.state.add("TitleScreenState", TitleScreenState, false);
+ this.game.state.start("TitleScreenState", true, true);
+ }
+
+ }
+ }
+
+ window.onload = () => {
+ var game = new GameFromScratch.SimpleGame();
+ };*/

@@ -5,14 +5,17 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-remove');
 
     grunt.initConfig({
         typescript: {
             app: {
-                src: ['app/scripts/**/*.ts'],
-                dest: 'build/js',
+                src: [
+                    'app/scripts/**/*.ts',
+                    'app/vendor/phaser-official/typescript/phaser.d.ts',
+                    'node_modules/types/lodash/index.d.ts'
+                ],
+                dest: 'build/js/main.js',
                 options: {
                     target: 'es5',
                     module: 'amd',
@@ -77,14 +80,9 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             }
-        },
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js'
-            }
         }
     });
 
     grunt.registerTask('default', ['remove','typescript', 'copy', 'less', 'open', 'connect', 'watch']);
-    grunt.registerTask('build', ['remove','typescript', 'copy', 'less','karma']);
+    grunt.registerTask('build', ['remove','typescript', 'copy', 'less']);
 }
