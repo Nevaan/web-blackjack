@@ -1,42 +1,60 @@
-module WebBlackjack {
-    export class Main extends Phaser.State {
-        //player: Model.Player;
-        currentBet: number = 0;
-        currentBalance: number = 0;
-        backButton: Phaser.Button;
-        currentBalanceText: Phaser.Text;
-        currentBetText: Phaser.Text;
+import * as Phaser from "phaser";
+import {Player} from "../model/Player";
+import {CardSet} from "../model/CardSet";
+import {Card} from "../model/Card";
+import {Token} from "../model/Token";
 
-        constructor() {
-            super();
-        }
+export class Main extends Phaser.State {
+    private game: Phaser.Game;
+    private currentBet: number = 0;
+    private currentBalance: number = 0;
+    private backButton: Phaser.Button;
+    private currentBalanceText: Phaser.Text;
+    private currentBetText: Phaser.Text;
+    private player: Player;
+    private cardSet: CardSet;
 
-        init() {
-            //this.player = new Model.Player();
-        }
+    constructor() {
+        super();
+    }
 
-        create() {
-            this.stage.backgroundColor = 0x000000;
-            this.backButton = this.add.button(30, 30, 'backButton', this.backToMenu, this, 2, 1, 0);
-            this.createText();
-        }
+    init() {
+        this.cardSet = new CardSet();
+        var cards: Card[] = [
+            this.cardSet.drawCard(),
+            this.cardSet.drawCard(),
+            this.cardSet.drawCard()
+        ];
+        var token: Token[] = [
 
-        backToMenu() {
-            this.game.state.start('menu');
-        }
+        ];
+        this.player = new Player(token, cards);
+    }
 
-        createText() {
-            this.currentBalanceText = this.add.text(this.world.width - 300, this.world.height - 140, "Your balance: $ " + this.currentBalance, {font: "30px bree"});
-            this.currentBalanceText.anchor.setTo(0);
+    create() {
+        this.game.stage.backgroundColor = 0x000000;
+        this.backButton = this.game.add.button(30, 30, 'backButton', this.backToMenu, this, 2, 1, 0);
+        this.createText();
 
-            this.currentBalanceText.fill = '#daa520';
-            this.currentBalanceText.align = 'center';
+        console.log(this.cardSet);
+        console.log(this.player);
+    }
 
-            this.currentBetText = this.add.text(this.world.width - 280, this.world.height - 105, "Current bet: $ " + this.currentBet, {font: "30px bree"});
-            this.currentBetText.anchor.setTo(0);
+    backToMenu() {
+        this.game.state.start('menu');
+    }
 
-            this.currentBetText.fill = '#daa520';
-            this.currentBetText.align = 'center';
-        }
+    createText() {
+        this.currentBalanceText = this.game.add.text(this.game.world.width - 300, this.game.world.height - 140, "Your balance: $ " + this.currentBalance, {font: "30px bree"});
+        this.currentBalanceText.anchor.setTo(0);
+
+        this.currentBalanceText.fill = '#daa520';
+        this.currentBalanceText.align = 'center';
+
+        this.currentBetText = this.game.add.text(this.game.world.width - 280, this.game.world.height - 105, "Current bet: $ " + this.currentBet, {font: "30px bree"});
+        this.currentBetText.anchor.setTo(0);
+
+        this.currentBetText.fill = '#daa520';
+        this.currentBetText.align = 'center';
     }
 }

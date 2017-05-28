@@ -1,19 +1,19 @@
-module WebBlackjack {
-    export class Util {
-        constructor() {
-        };
+import {TokenValue, Token} from "../model/Token";
 
-        public convertAmountToTokens(amount: number): Token[] {
-            let tokenAmount = TokenValue.length;
+export class Util {
+    constructor() {
+    };
 
-            while (tokenAmount > 0) {
-                tokenAmount--;
-            }
-            return [];
+    public convertAmountToTokens(amount: number): Token[] {
+        let tokenAmount = TokenValue.length;
+
+        while (tokenAmount > 0) {
+            tokenAmount--;
         }
+        return [];
+    }
 
-        public checkout(a: number, b: number) {
-            return a / b;
-        }
+    public checkout(a: number, b: number) {
+        return a / b;
     }
 }

@@ -1,9 +1,9 @@
 .idea/*
-build/*
+dist/*
 node_modules/*
 app/vendor/*
 .DS_Store
-*.d.ts
 typings/*
 *.log
 *.orig
+app/scripts/**/*.js

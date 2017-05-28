@@ -3,9 +3,7 @@ node_js:
 - "6"
 before_install:
 - npm install -g typescript
-- npm install -g grunt-cli
-- npm install -g bower
 - npm install -g typings
-- typings install dt~jasmine --save --global
+- npm install -g webpack
 script:
-- grunt build
+- npm build

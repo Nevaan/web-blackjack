@@ -5,7 +5,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var appPath = __dirname + '/build';
+var appPath = __dirname + '/dist';
 
 app.use(express.static(appPath));
 app.use("/styles", express.static(appPath + '/styles'));
