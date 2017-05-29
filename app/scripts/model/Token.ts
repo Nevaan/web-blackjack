@@ -2,22 +2,18 @@ export var TokenValues: number[] = [
     1,
     5,
     10,
-    20,
+    25,
     50,
     100,
     500
 ]
 
-export class TokenValue {
-
-    constructor(val: number) {
-
-    }
-
-}
 
 export class Token {
-    constructor(private _value: TokenValue) {
+    constructor(private _value: number) {
+        if(_value == null) {
+            throw "Undefined token value";
+        }
     };
 
     get value() {
