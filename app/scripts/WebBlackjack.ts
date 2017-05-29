@@ -1,9 +1,11 @@
+declare function require(name:string);
 import * as Phaser from "phaser";
 import {Boot} from "./state/Boot";
 import {Preload} from "./state/Preload";
 import {Menu} from "./state/Menu";
 import {Main} from "./state/Main";
 import {Options} from "./state/Options";
+require("../styles/main.less");
 
 class WebBlackjack {
     game: Phaser.Game;
