@@ -6,4 +6,4 @@ before_install:
 - npm install -g typings
 - npm install -g webpack
 script:
-- npm build
+- npm
