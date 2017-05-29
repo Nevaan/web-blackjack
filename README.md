@@ -5,28 +5,31 @@
 Blackjack card game implementation. 
 
 Used technologies:
-- Bower,
-- Grunt,
 - Javascript,
 - Typescript, 
 - Phaser,
-- Yeoman,
-- Karma,
-- Jasmine,
 - Node.js,
 - Express,
 - Google Web Fonts,
-- to be continued ... 
+- Webpack
 
-Project was initialized with Yeoman Phaser Typescript template (https://github.com/rcolinray/generator-phaser-typescript).
+Abandoned due to short ddl, but planned to reimplement:
+- Karma,
+- Jasmine.
 
 Current version available on [Heroku](https://web-blackjack-game.herokuapp.com).
 
 # Running the app
 Just type 
 ```
-	grunt
-``` 
+    npm install
+```
+```
+    npm build
+```
+```
+    npm start
+```
 in terminal.
 
 App available on address _http://localhost:8080_ by default (when running locally).
