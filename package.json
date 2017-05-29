@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "export NODE_ENV=development",
-    "postinstall": "typings install dt~jasmine --save --global;",
+    "postinstall": "typings install dt~jasmine --save --global;npm install -g webpack",
     "build": "webpack",
     "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress",
     "start": "node server.js"
