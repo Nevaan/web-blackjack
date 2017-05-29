@@ -7,4 +7,4 @@ before_install:
 - npm install -g webpack
 - npm install --only=dev
 script:
-- npm start
+- npm build
