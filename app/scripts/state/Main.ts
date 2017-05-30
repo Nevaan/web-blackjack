@@ -37,7 +37,7 @@ export class Main extends Phaser.State {
             this.cardSet.drawCard()
         ];
         this.currentBet = [];
-        this.player = new Player(cards, 1000);
+        this.player = new Player(cards, this.game.global.startingBalance);
     }
 
     create() {
@@ -55,7 +55,6 @@ export class Main extends Phaser.State {
         this.currentBalanceText = this.game.add.text(this.game.world.width - 300, this.game.world.height - 140, "Your balance: $" + this.player.balance, {font: "30px bree"});
         this.currentBalanceText.anchor.setTo(0);
 
-
         this.currentBalanceText.fill = '#daa520';
         this.currentBalanceText.align = 'center';
 
@@ -65,12 +64,15 @@ export class Main extends Phaser.State {
         this.currentBetText.fill = '#daa520';
         this.currentBetText.align = 'center';
 
-        this.dealButton = this.game.add.text(this.game.world.width -280, this.game.world.height - 200, "DEAL", {
+        this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 200, "DEAL", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
+        this.dealButton.inputEnabled = true;
         this.dealButton.anchor.set(0);
+        this.dealButton.events.onInputDown.add(this.onDealAction, this);
+
     }
 
     //TODO: replace with real buttons
@@ -153,5 +155,18 @@ export class Main extends Phaser.State {
 
     isBetPossible(amount: number): boolean {
         return Math.floor(this.player.balance / amount) && this.player.balance - amount >= 0;
+    }
+
+    onDealAction() {
+        if(!_.isEmpty(this.currentBet)) {
+            this.oneTokenButton.visible = false;
+            this.fiveTokenButton.visible = false;
+            this.tenTokenButton.visible = false;
+            this.twentyFiveTokenButton.visible = false;
+            this.fiftyTokenButton.visible = false;
+            this.hundredTokenButton.visible = false;
+            this.fiveHundredTokenButton.visible = false;
+            this.dealButton.visible = false;
+        }
     }
 }

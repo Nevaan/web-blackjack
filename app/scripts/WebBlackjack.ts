@@ -13,6 +13,10 @@ class WebBlackjack {
     constructor(){
         this.game = new Phaser.Game(800, 600, Phaser.WEBGL, "game-content");
 
+        this.game.global = {
+            startingBalance: 1000
+        }
+
         this.game.state.add('boot', Boot, false);
         this.game.state.add('preload', Preload, false);
         this.game.state.add('menu', Menu, false);

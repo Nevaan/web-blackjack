@@ -21,8 +21,6 @@ export class Preload extends Phaser.State {
     }
 
     create() {
-        this.game.time.events.add(Phaser.Timer.SECOND, () => {
             this.game.state.start('menu');
-        }, this);
     }
 }
