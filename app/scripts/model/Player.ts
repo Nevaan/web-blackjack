@@ -1,19 +1,18 @@
 import {Card} from "./Card";
-import {Token} from "./Token";
 export class Player {
-
-    constructor(private _tokens: Token[], private _cards: Card[]) {
-    }
-
-    get tokens() {
-        return this._tokens;
+    constructor(private _cards: Card[], private _balance: number) {
     }
 
     get cards() {
         return this._cards;
     }
 
-    public testMethod(a: number) {
-        return a;
+    get balance() {
+        return this._balance;
     }
+
+    set balance(amount: number) {
+        this._balance = amount;
+    }
+
 }

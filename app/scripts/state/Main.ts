@@ -23,6 +23,7 @@ export class Main extends Phaser.State {
     private fiftyTokenButton: Phaser.Text;
     private hundredTokenButton: Phaser.Text;
     private fiveHundredTokenButton: Phaser.Text;
+    private dealButton: Phaser.Text;
 
     constructor() {
         super();
@@ -35,19 +36,8 @@ export class Main extends Phaser.State {
             this.cardSet.drawCard(),
             this.cardSet.drawCard()
         ];
-
-        // initial tokens
-        var tokens: Token[] = _.concat(
-            Util.getAmountOfTokens(1, 500),
-            Util.getAmountOfTokens(2, 100),
-            Util.getAmountOfTokens(2, 50),
-            Util.getAmountOfTokens(5, 25),
-            Util.getAmountOfTokens(4, 10),
-            Util.getAmountOfTokens(5, 5),
-            Util.getAmountOfTokens(10, 1),
-        );
         this.currentBet = [];
-        this.player = new Player(tokens, cards);
+        this.player = new Player(cards, 1000);
     }
 
     create() {
@@ -62,7 +52,7 @@ export class Main extends Phaser.State {
     }
 
     createText() {
-        this.currentBalanceText = this.game.add.text(this.game.world.width - 300, this.game.world.height - 140, "Your balance: $" + Util.convertTokensToAmount(this.player.tokens), {font: "30px bree"});
+        this.currentBalanceText = this.game.add.text(this.game.world.width - 300, this.game.world.height - 140, "Your balance: $" + this.player.balance, {font: "30px bree"});
         this.currentBalanceText.anchor.setTo(0);
 
 
@@ -74,97 +64,94 @@ export class Main extends Phaser.State {
 
         this.currentBetText.fill = '#daa520';
         this.currentBetText.align = 'center';
+
+        this.dealButton = this.game.add.text(this.game.world.width -280, this.game.world.height - 200, "DEAL", {
+            font: "30px bree",
+            fill: "#daa520",
+            align: "center"
+        });
+        this.dealButton.anchor.set(0);
     }
 
     //TODO: replace with real buttons
     createTokenButtons() {
-        this.oneTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 200, "1$"+this.getTokenAmountString(1), {
+        this.oneTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 200, "1$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.oneTokenButton.anchor.setTo(0);
         this.oneTokenButton.inputEnabled = true;
-        this.oneTokenButton.events.onInputDown.add(() => this.updateBet(1,this.oneTokenButton), this);
+        this.oneTokenButton.events.onInputDown.add(() => this.updateBet(1), this);
 
 
-        this.fiveTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 150, "5$"+this.getTokenAmountString(5), {
+        this.fiveTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 150, "5$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.fiveTokenButton.anchor.setTo(0);
         this.fiveTokenButton.inputEnabled = true;
-        this.fiveTokenButton.events.onInputDown.add(() => this.updateBet(5,this.fiveTokenButton), this);
+        this.fiveTokenButton.events.onInputDown.add(() => this.updateBet(5), this);
 
-        this.tenTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 100, "10$"+this.getTokenAmountString(10), {
+        this.tenTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 100, "10$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.tenTokenButton.anchor.setTo(0);
         this.tenTokenButton.inputEnabled = true;
-        this.tenTokenButton.events.onInputDown.add(() => this.updateBet(10,this.tenTokenButton), this);
+        this.tenTokenButton.events.onInputDown.add(() => this.updateBet(10), this);
 
-        this.twentyFiveTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 200, "25$"+this.getTokenAmountString(25), {
+        this.twentyFiveTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 200, "25$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.twentyFiveTokenButton.anchor.setTo(0);
         this.twentyFiveTokenButton.inputEnabled = true;
-        this.twentyFiveTokenButton.events.onInputDown.add(() => this.updateBet(25,this.twentyFiveTokenButton), this);
+        this.twentyFiveTokenButton.events.onInputDown.add(() => this.updateBet(25), this);
 
-        this.fiftyTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 150, "50$"+this.getTokenAmountString(50), {
+        this.fiftyTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 150, "50$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.fiftyTokenButton.anchor.setTo(0);
         this.fiftyTokenButton.inputEnabled = true;
-        this.fiftyTokenButton.events.onInputDown.add(() => this.updateBet(50,this.fiftyTokenButton), this);
+        this.fiftyTokenButton.events.onInputDown.add(() => this.updateBet(50), this);
 
-        this.hundredTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 100, "100$"+this.getTokenAmountString(100), {
+        this.hundredTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 100, "100$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.hundredTokenButton.anchor.setTo(0);
         this.hundredTokenButton.inputEnabled = true;
-        this.hundredTokenButton.events.onInputDown.add(() => this.updateBet(100,this.hundredTokenButton), this);
+        this.hundredTokenButton.events.onInputDown.add(() => this.updateBet(100), this);
 
-        this.fiveHundredTokenButton = this.game.add.text(this.game.world.width / 2, this.game.world.height - 200, "500$" + this.getTokenAmountString(500), {
+        this.fiveHundredTokenButton = this.game.add.text(this.game.world.width / 2, this.game.world.height - 200, "500$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
         });
         this.fiveHundredTokenButton.anchor.setTo(0);
         this.fiveHundredTokenButton.inputEnabled = true;
-        this.fiveHundredTokenButton.events.onInputDown.add(() => this.updateBet(500, this.fiveHundredTokenButton), this);
+        this.fiveHundredTokenButton.events.onInputDown.add(() => this.updateBet(500), this);
+
     }
 
-    updateBet(betValue: number, button?: Phaser.Text) {
-        let betToken = _.find(this.player.tokens, (token) => {
-            return token.value === betValue
-        });
-        if (betToken) {
-            this.currentBet = this.currentBet.concat(betToken);
-            this.player.tokens.splice(_.findIndex(this.player.tokens, (token) => {
-                return token.value === betValue
-            }), 1);
+    updateBet(amount: number) {
+        if (this.isBetPossible(amount)) {
+            this.currentBet = this.currentBet.concat(new Token(amount));
+            this.player.balance -= amount;
+
+            this.currentBalanceText.setText("Your balance: $" + this.player.balance, true)
+            this.currentBetText.setText("Current bet: $" + Util.convertTokensToAmount(this.currentBet), true);
         }
-        if (button) {
-            let buttonText = button.text.split("$");
-            button.setText(buttonText[0] + "$" + this.getTokenAmountString(betToken.value), true);
-        }
-        this.currentBalanceText.setText("Your balance: $" + Util.convertTokensToAmount(this.player.tokens), true)
-        this.currentBetText.setText("Current bet: $" + Util.convertTokensToAmount(this.currentBet), true);
     }
 
-    getTokenAmountString(tokenValue:number): string {
-        return "(" + _.filter(this.player.tokens, (token) => {
-                if (token.value === tokenValue) return token
-            }).length + "x)";
+    isBetPossible(amount: number): boolean {
+        return Math.floor(this.player.balance / amount) && this.player.balance - amount >= 0;
     }
-
 }
