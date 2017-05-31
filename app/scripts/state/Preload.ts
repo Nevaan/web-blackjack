@@ -17,6 +17,8 @@ export class Preload extends Phaser.State {
         this.game.load.spritesheet('startButton', 'assets/images/buttons/start_button.png', 200, 40);
         this.game.load.spritesheet('optionsButton', 'assets/images/buttons/options_button.png', 200, 40);
         this.game.load.spritesheet('backButton', 'assets/images/buttons/back_button.png', 110, 35);
+        this.game.load.image('casinoTable', 'assets/images/table.png', 799, 333);
+        this.game.load.image('cardBack', 'assets/images/card_back.png', 72, 100);
 
     }
 

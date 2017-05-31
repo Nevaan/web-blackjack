@@ -7,13 +7,19 @@ import {Util} from "../util/Util";
 import * as _ from "lodash";
 
 export class Main extends Phaser.State {
-    private game: Phaser.Game;
+
     private currentBet: Token[];
+    private player: Player;
+    private cardSet: CardSet;
+
+
+    private game: Phaser.Game;
+    private casinoTable: Phaser.Sprite;
+    private cardDeck: Phaser.Sprite;
     private backButton: Phaser.Button;
     private currentBalanceText: Phaser.Text;
     private currentBetText: Phaser.Text;
-    private player: Player;
-    private cardSet: CardSet;
+
 
     // temp token buttons
     private oneTokenButton: Phaser.Text;
@@ -42,6 +48,13 @@ export class Main extends Phaser.State {
 
     create() {
         this.game.stage.backgroundColor = 0x000000;
+        this.casinoTable = this.game.add.sprite(0, 65, 'casinoTable');
+
+        this.cardDeck = this.game.add.sprite(this.game.world.width - 160, 150,'cardBack');
+        this.cardDeck.angle -= 90;
+        this.game.add.sprite(this.game.world.width - 157, 153,'cardBack').angle -= 90;
+        this.game.add.sprite(this.game.world.width - 154, 156,'cardBack').angle -= 90;
+
         this.backButton = this.game.add.button(30, 30, 'backButton', this.backToMenu, this, 2, 1, 0);
         this.createTokenButtons();
         this.createText();
@@ -64,7 +77,7 @@ export class Main extends Phaser.State {
         this.currentBetText.fill = '#daa520';
         this.currentBetText.align = 'center';
 
-        this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 200, "DEAL", {
+        this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 180, "DEAL", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -77,7 +90,7 @@ export class Main extends Phaser.State {
 
     //TODO: replace with real buttons
     createTokenButtons() {
-        this.oneTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 200, "1$", {
+        this.oneTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 180, "1$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -87,7 +100,7 @@ export class Main extends Phaser.State {
         this.oneTokenButton.events.onInputDown.add(() => this.updateBet(1), this);
 
 
-        this.fiveTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 150, "5$", {
+        this.fiveTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 130, "5$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -96,7 +109,7 @@ export class Main extends Phaser.State {
         this.fiveTokenButton.inputEnabled = true;
         this.fiveTokenButton.events.onInputDown.add(() => this.updateBet(5), this);
 
-        this.tenTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 100, "10$", {
+        this.tenTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 80, "10$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -105,7 +118,7 @@ export class Main extends Phaser.State {
         this.tenTokenButton.inputEnabled = true;
         this.tenTokenButton.events.onInputDown.add(() => this.updateBet(10), this);
 
-        this.twentyFiveTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 200, "25$", {
+        this.twentyFiveTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 180, "25$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -114,7 +127,7 @@ export class Main extends Phaser.State {
         this.twentyFiveTokenButton.inputEnabled = true;
         this.twentyFiveTokenButton.events.onInputDown.add(() => this.updateBet(25), this);
 
-        this.fiftyTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 150, "50$", {
+        this.fiftyTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 130, "50$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -123,7 +136,7 @@ export class Main extends Phaser.State {
         this.fiftyTokenButton.inputEnabled = true;
         this.fiftyTokenButton.events.onInputDown.add(() => this.updateBet(50), this);
 
-        this.hundredTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 100, "100$", {
+        this.hundredTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 80, "100$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
@@ -132,7 +145,7 @@ export class Main extends Phaser.State {
         this.hundredTokenButton.inputEnabled = true;
         this.hundredTokenButton.events.onInputDown.add(() => this.updateBet(100), this);
 
-        this.fiveHundredTokenButton = this.game.add.text(this.game.world.width / 2, this.game.world.height - 200, "500$", {
+        this.fiveHundredTokenButton = this.game.add.text(this.game.world.width / 2, this.game.world.height - 180, "500$", {
             font: "30px bree",
             fill: "#daa520",
             align: "center"
