@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test specified\" && exit 0",
     "postinstall": "typings install dt~jasmine --save --global;npm install -g webpack",
     "build": "webpack",
     "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress",
