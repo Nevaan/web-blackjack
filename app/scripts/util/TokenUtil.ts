@@ -1,7 +1,12 @@
 import {Token, TokenValues} from "../model/Token";
 import * as _ from "lodash";
 
-export class Util {
+export class TokenUtil {
+
+    private constructor() {
+
+    }
+
     public static convertAmountToTokens(amount: number): Token[] {
         let tokenAmount = TokenValues.length - 1;
         let tokens: Token[] = [];

@@ -3,12 +3,15 @@ import {Player} from "../model/Player";
 import {CardSet} from "../model/CardSet";
 import {Card} from "../model/Card";
 import {Token} from "../model/Token";
-import {Util} from "../util/Util";
+import {TokenUtil} from "../util/TokenUtil";
 import * as _ from "lodash";
+import {CardUtil} from "../util/CardUtil";
+import {Dealer} from "../model/Dealer";
 
 export class Main extends Phaser.State {
 
     private currentBet: Token[];
+    private dealer: Dealer;
     private player: Player;
     private cardSet: CardSet;
 
@@ -37,13 +40,9 @@ export class Main extends Phaser.State {
 
     init() {
         this.cardSet = new CardSet();
-        var cards: Card[] = [
-            this.cardSet.drawCard(),
-            this.cardSet.drawCard(),
-            this.cardSet.drawCard()
-        ];
         this.currentBet = [];
-        this.player = new Player(cards, this.game.global.startingBalance);
+        this.player = new Player([this.cardSet.drawCard(), this.cardSet.drawCard()] , this.game.global.startingBalance);
+        this.dealer = new Dealer([this.cardSet.drawCard(), this.cardSet.drawCard()]);
     }
 
     create() {
@@ -54,6 +53,7 @@ export class Main extends Phaser.State {
         this.cardDeck.angle -= 90;
         this.game.add.sprite(this.game.world.width - 157, 153,'cardBack').angle -= 90;
         this.game.add.sprite(this.game.world.width - 154, 156,'cardBack').angle -= 90;
+
 
         this.backButton = this.game.add.button(30, 30, 'backButton', this.backToMenu, this, 2, 1, 0);
         this.createTokenButtons();
@@ -71,7 +71,7 @@ export class Main extends Phaser.State {
         this.currentBalanceText.fill = '#daa520';
         this.currentBalanceText.align = 'center';
 
-        this.currentBetText = this.game.add.text(this.game.world.width - 280, this.game.world.height - 105, "Current bet: $" + Util.convertTokensToAmount(this.currentBet), {font: "30px bree"});
+        this.currentBetText = this.game.add.text(this.game.world.width - 280, this.game.world.height - 105, "Current bet: $" + TokenUtil.convertTokensToAmount(this.currentBet), {font: "30px bree"});
         this.currentBetText.anchor.setTo(0);
 
         this.currentBetText.fill = '#daa520';
@@ -162,7 +162,7 @@ export class Main extends Phaser.State {
             this.player.balance -= amount;
 
             this.currentBalanceText.setText("Your balance: $" + this.player.balance, true)
-            this.currentBetText.setText("Current bet: $" + Util.convertTokensToAmount(this.currentBet), true);
+            this.currentBetText.setText("Current bet: $" + TokenUtil.convertTokensToAmount(this.currentBet), true);
         }
     }
 
@@ -180,6 +180,12 @@ export class Main extends Phaser.State {
             this.hundredTokenButton.visible = false;
             this.fiveHundredTokenButton.visible = false;
             this.dealButton.visible = false;
+
+            this.game.add.sprite(this.game.world.width / 2 - 72, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[0]));
+            this.game.add.sprite(this.game.world.width / 2 , this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[1]));
+
+            this.game.add.sprite(this.game.world.width / 2 - 72, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[0]));
+            this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, 'cardBack');
         }
     }
 }
