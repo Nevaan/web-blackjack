@@ -34,6 +34,14 @@ export class Main extends Phaser.State {
     private fiveHundredTokenButton: Phaser.Text;
     private dealButton: Phaser.Text;
 
+    //action buttons;
+
+    private hitButton: Phaser.Text;
+    private standButton: Phaser.Text;
+    private doubleBetButton: Phaser.Text;
+    private splitButton: Phaser.Text;
+    private surrenderButton: Phaser.Text;
+
     constructor() {
         super();
     }
@@ -156,6 +164,25 @@ export class Main extends Phaser.State {
 
     }
 
+    createActionButtons() {
+        let textStyle =  {
+            font: "30px bree",
+            fill: "#daa520",
+            align: "center"
+        };
+
+        this.hitButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 180, "Hit",textStyle);
+        this.hitButton.anchor.setTo(0);
+        this.standButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 130, "Stand", textStyle);
+        this.standButton.anchor.setTo(0);
+        this.doubleBetButton = this.game.add.text(this.game.world.width / 10,this.game.world.height - 80, "Double", textStyle);
+        this.doubleBetButton.anchor.setTo(0);
+        this.splitButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 180, "Split", textStyle);
+        this.splitButton.anchor.setTo(0);
+        this.surrenderButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 130, "Surrender", textStyle);
+        this.surrenderButton.anchor.setTo(0);
+    }
+
     updateBet(amount: number) {
         if (this.isBetPossible(amount)) {
             this.currentBet = this.currentBet.concat(new Token(amount));
@@ -186,6 +213,8 @@ export class Main extends Phaser.State {
 
             this.game.add.sprite(this.game.world.width / 2 - 72, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[0]));
             this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, 'cardBack');
+
+            this.createActionButtons();
         }
     }
 }
