@@ -6,7 +6,7 @@ export const Colours: string[] = [
 ]
 
 export const RankValues = {
-    "ACE": NaN,
+    "ACE": 0, // this card value is set depending on players score -- counted in CardUtil -- and should be never taken in consideration
     "KING": 10,
     "QUEEN": 10,
     "JACK": 10,
