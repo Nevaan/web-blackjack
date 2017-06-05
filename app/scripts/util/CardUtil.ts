@@ -24,7 +24,7 @@ export class CardUtil {
         });
 
         _.forEach(aces,() => {
-            if((count + 11 + (aces.length-1) ) < 21) {
+            if((count + 11 + (aces.length-1) ) <= 21) {
                 count += 11;
             } else {
                 count += 1;

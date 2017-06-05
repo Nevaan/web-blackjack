@@ -1,4 +1,6 @@
 import {Card} from "./Card";
+import * as _ from "lodash";
+
 export class Player {
     constructor(private _cards: Card[], private _balance: number) {
     }
@@ -13,6 +15,10 @@ export class Player {
 
     set balance(amount: number) {
         this._balance = amount;
+    }
+
+    addCard(card: Card) {
+        this._cards = _.concat(this._cards, card);
     }
 
 }

@@ -9,7 +9,7 @@ export class Preload extends Phaser.State {
     }
 
     preload() {
-        this.preloadBar = this.game.add.sprite(0, this.game.world.centerY + 40, 'preload-bar');
+        this.preloadBar = this.game.add.sprite(85, this.game.world.centerY + 40, 'preload-bar');
         this.game.load.setPreloadSprite(this.preloadBar);
 
         this.game.load.image('menu-background', 'assets/images/menu-background.png');
