@@ -161,12 +161,14 @@ export class Main extends Phaser.State {
             this.stand();
         }, this);
 
-        this.doubleBetButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 80, "Double", this.textStyle, this.actionButtons);
-        this.doubleBetButton.anchor.setTo(0);
-        this.doubleBetButton.inputEnabled = true;
-        this.doubleBetButton.events.onInputDown.add(() => {
-            this.double();
-        }, this);
+        if(TokenUtil.convertTokensToAmount(this.currentBet) <= this.player.balance) {
+            this.doubleBetButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 80, "Double", this.textStyle, this.actionButtons);
+            this.doubleBetButton.anchor.setTo(0);
+            this.doubleBetButton.inputEnabled = true;
+            this.doubleBetButton.events.onInputDown.add(() => {
+                this.double();
+            }, this);
+        };
 
         this.splitButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 180, "Split", this.textStyle, this.actionButtons);
         this.splitButton.anchor.setTo(0);
@@ -184,12 +186,7 @@ export class Main extends Phaser.State {
     }
 
     hit() {
-        this.player.addCard(this.cardSet.drawCard());
-        this.playerCardsGroup.left -= 72;
-        this.playerCardsGroup.add(
-            this.game.add.sprite(this.game.world.width / 2 + ((this.playerCardsGroup.length-1) * 72), this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[this.playerCardsGroup.length]))
-        );
-        this.updatePlayerCardCount();
+        this.addCardForPlayer();
 
         if(CardUtil.countCards(this.player.cards) > 21) {
             this.gameLost();
@@ -197,11 +194,19 @@ export class Main extends Phaser.State {
     }
 
     stand() {
-        console.log('stand');
+        this.actionButtons.visible = false;
+        /*
+         TODO: insert dealer play
+         */
     }
 
     double() {
-        console.log('double');
+       this.updateBet(TokenUtil.convertTokensToAmount(this.currentBet));
+        this.addCardForPlayer();
+       this.actionButtons.visible = false;
+       /*
+       TODO: insert dealer play
+        */
     }
 
     split() {
@@ -251,6 +256,15 @@ export class Main extends Phaser.State {
 
             this.createActionButtons();
         }
+    }
+
+    addCardForPlayer() {
+        this.player.addCard(this.cardSet.drawCard());
+        this.playerCardsGroup.left -= 72;
+        this.playerCardsGroup.add(
+            this.game.add.sprite(this.game.world.width / 2 + ((this.playerCardsGroup.length-1) * 72), this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[this.playerCardsGroup.length]))
+        );
+        this.updatePlayerCardCount();
     }
 
     updatePlayerCardCount() {
