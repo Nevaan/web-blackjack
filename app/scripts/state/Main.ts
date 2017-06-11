@@ -6,7 +6,6 @@ import {TokenUtil} from "../util/TokenUtil";
 import * as _ from "lodash";
 import {CardUtil} from "../util/CardUtil";
 import {Dealer} from "../model/Dealer";
-import {Card} from "../model/Card";
 
 export class Main extends Phaser.State {
 
@@ -240,6 +239,16 @@ export class Main extends Phaser.State {
         /*
          TODO: insert dealer play
          */
+        this.game.time.events.add(Phaser.Timer.SECOND, () => {
+            this.dealerCardsGroup.getChildAt(1).destroy();
+            //this.dealerCardsGroup.removeChild(1);
+            this.dealerCardsGroup.add(
+                this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[1])));
+
+            console.log(this.dealerCardsGroup);
+
+            this.dealerPlay();
+        });
     }
 
     double() {
@@ -268,6 +277,7 @@ export class Main extends Phaser.State {
             this.player.balance -= amount;
 
             this.updateBalanceAndBetText();
+            this.colorTokenButtonsRed();
         }
     }
 
@@ -292,7 +302,7 @@ export class Main extends Phaser.State {
             this.dealer.addCard(this.cardSet.drawCard());
 
             this.playerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2 - 72, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[0]))
+                this.game.add.sprite(this.game.world.width / 2 - 20, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[0]))
             );
 
             this.playerCardsGroup.add(
@@ -300,7 +310,7 @@ export class Main extends Phaser.State {
             );
 
             this.dealerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2 - 72, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[0]))
+                this.game.add.sprite(this.game.world.width / 2 - 20, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[0]))
             );
             this.dealerCardsGroup.add(
                 this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, 'cardBack')
@@ -309,16 +319,28 @@ export class Main extends Phaser.State {
             this.playerCardCount.visible = true;
             this.showActionButtons();
             this.actionButtons.visible = true;
+            this.updatePlayerCardCount();
         }
     }
 
     addCardForPlayer() {
         this.player.addCard(this.cardSet.drawCard());
-        this.playerCardsGroup.left -= 72;
+        this.playerCardsGroup.left -= 20;
         this.playerCardsGroup.add(
-            this.game.add.sprite(this.game.world.width / 2 + ((this.playerCardsGroup.length - 1) * 72), this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[this.playerCardsGroup.length]))
+            this.game.add.sprite(this.game.world.width / 2 + ((this.playerCardsGroup.length - 1) * 20), this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[this.playerCardsGroup.length]))
         );
         this.updatePlayerCardCount();
+    }
+
+    dealerPlay() {
+
+        if(CardUtil.countCards(this.dealer.cards) <= 16) {
+            this.game.time.events.add(Phaser.Timer.SECOND, () => {
+                this.dealer.addCard(this.cardSet.drawCard());
+                console.log(this.dealer.cards);
+                this.dealerPlay();
+            });
+        }
     }
 
     updatePlayerCardCount() {
@@ -333,8 +355,18 @@ export class Main extends Phaser.State {
         this.startNewRoundButton.visible = true;
     }
 
+    colorTokenButtonsRed() {
+        _.forEach(this.tokenButtons.children, (element) => {
+            let elementAmount = _.replace(element.text, '$', '');
+            if( _.parseInt(elementAmount) > this.player.balance ) {
+                element.fill = "#8B0000";
+            }
+        })
+    }
+
     reinitializeGame(result: boolean) {
         this.dealButton.visible = true;
+        this.colorTokenButtonsRed();
         this.tokenButtons.visible = true;
         this.startNewRoundButton.visible = false;
 
