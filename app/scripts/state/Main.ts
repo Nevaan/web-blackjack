@@ -101,9 +101,13 @@ export class Main extends Phaser.State {
         this.currentBetText = this.game.add.text(this.game.world.width - 280, this.game.world.height - 105, "Current bet: $" + TokenUtil.convertTokensToAmount(this.currentBet), this.textStyle);
         this.currentBetText.anchor.setTo(0);
 
-        this.playerCardCount = this.game.add.text(this.game.world.width - 280, this.game.world.height - 70, "Your card count: " + CardUtil.countCards(this.player.cards), this.textStyle);
+        this.playerCardCount = this.game.add.text(this.game.world.width - 200, this.game.world.height - 240, "Player: " + CardUtil.countCards(this.player.cards), this.textStyle);
         this.playerCardCount.anchor.setTo(0);
         this.playerCardCount.visible = false;
+
+        this.dealerCardCount = this.game.add.text(50, this.game.world.height - 240, "Dealer: " + CardUtil.countCards(this.dealer.cards), this.textStyle);
+        this.dealerCardCount.anchor.setTo(0);
+        this.dealerCardCount.visible = false;
 
         this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 180, "DEAL", this.textStyle);
         this.dealButton.inputEnabled = true;
@@ -241,7 +245,6 @@ export class Main extends Phaser.State {
          */
         this.game.time.events.add(Phaser.Timer.SECOND, () => {
             this.dealerCardsGroup.getChildAt(1).destroy();
-            //this.dealerCardsGroup.removeChild(1);
             this.dealerCardsGroup.add(
                 this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[1])));
 
@@ -317,9 +320,11 @@ export class Main extends Phaser.State {
             );
 
             this.playerCardCount.visible = true;
+            this.dealerCardCount.visible = true;
             this.showActionButtons();
             this.actionButtons.visible = true;
             this.updatePlayerCardCount();
+            this.updateDealerCardCount();
         }
     }
 
@@ -332,22 +337,30 @@ export class Main extends Phaser.State {
         this.updatePlayerCardCount();
     }
 
-    dealerPlay() {
+    addCardForDealer() {
+        this.dealer.addCard(this.cardSet.drawCard());
+        this.dealerCardsGroup.left -= 20;
+        this.dealerCardsGroup.add(
+            this.game.add.sprite(this.game.world.width / 2 + ((this.dealerCardsGroup.length - 1) * 20), this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[this.dealerCardsGroup.length]))
+        );
+        this.updateDealerCardCount();
+    }
 
-        if(CardUtil.countCards(this.dealer.cards) <= 16) {
+    dealerPlay() {
+        if (CardUtil.countCards(this.dealer.cards) <= 16) {
             this.game.time.events.add(Phaser.Timer.SECOND, () => {
-                this.dealer.addCard(this.cardSet.drawCard());
-                console.log(this.dealer.cards);
+                this.addCardForDealer();
                 this.dealerPlay();
             });
         }
     }
 
     updatePlayerCardCount() {
-        this.playerCardCount.setText("Your card count: " + CardUtil.countCards(this.player.cards), true);
+        this.playerCardCount.setText("Player: " + CardUtil.countCards(this.player.cards), true);
     }
 
     updateDealerCardCount() {
+        this.dealerCardCount.setText("Dealer: " + CardUtil.countCards(this.dealer.cards), true);
     }
 
     gameLost() {
@@ -358,7 +371,7 @@ export class Main extends Phaser.State {
     colorTokenButtonsRed() {
         _.forEach(this.tokenButtons.children, (element) => {
             let elementAmount = _.replace(element.text, '$', '');
-            if( _.parseInt(elementAmount) > this.player.balance ) {
+            if (_.parseInt(elementAmount) > this.player.balance) {
                 element.fill = "#8B0000";
             }
         })
@@ -380,6 +393,7 @@ export class Main extends Phaser.State {
         this.dealer.cards = [];
 
         this.updatePlayerCardCount();
+        this.updateDealerCardCount();
         this.updateBalanceAndBetText();
 
         if (!result) {
