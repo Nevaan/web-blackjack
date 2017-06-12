@@ -6,6 +6,7 @@ import {TokenUtil} from "../util/TokenUtil";
 import * as _ from "lodash";
 import {CardUtil} from "../util/CardUtil";
 import {Dealer} from "../model/Dealer";
+import {Card} from "../model/Card";
 
 export class Main extends Phaser.State {
 
@@ -95,7 +96,7 @@ export class Main extends Phaser.State {
 
         this.backButton = this.game.add.button(20, 15, 'backButton', this.backToMenu, this, 2, 1, 0);
 
-        this.game.sound.setDecodedCallback([ this.tokenSelectSound, this.dealCardSound, this.clickButtonSound ], this.createTokenButtons, this);
+        this.game.sound.setDecodedCallback([this.tokenSelectSound, this.dealCardSound, this.clickButtonSound], this.createTokenButtons, this);
 
         this.createText();
         this.createActionButtons();
@@ -239,7 +240,7 @@ export class Main extends Phaser.State {
         }
 
         if (this.player.cards[0].getCardValue() === this.player.cards[1].getCardValue()) {
-            this.splitButton.visible = true;
+            //this.splitButton.visible = true;
         }
 
         if (this.dealer.cards[0].rank === "ACE") {
@@ -250,6 +251,7 @@ export class Main extends Phaser.State {
     hit() {
         this.doubleBetButton.visible = false;
         this.splitButton.visible = false;
+        this.insuranceButton.visible = false;
 
         this.addCardForPlayer();
 
@@ -263,11 +265,7 @@ export class Main extends Phaser.State {
         this.clickButtonSound.play();
 
         this.game.time.events.add(Phaser.Timer.SECOND, () => {
-            this.dealerCardsGroup.getChildAt(1).destroy();
-            this.dealCardSound.play();
-            this.dealerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[1])));
-            this.updateDealerCardCount();
+            this.showDealersSecondCard();
             this.dealerPlay();
         });
     }
@@ -275,7 +273,7 @@ export class Main extends Phaser.State {
     double() {
         this.updateBet(TokenUtil.convertTokensToAmount(this.currentBet));
         this.addCardForPlayer();
-        if(CardUtil.countCards(this.player.cards) <= 21) {
+        if (CardUtil.countCards(this.player.cards) <= 21) {
             this.stand();
         } else {
             this.gameLost();
@@ -288,19 +286,60 @@ export class Main extends Phaser.State {
 
     insurance() {
         //todo: reset on round end
+        this.actionButtons.visible = false;
+        this.insuranceButton.visible = false;
         this.betInsured = true;
         this.updateBet(_.floor(TokenUtil.convertTokensToAmount(this.currentBet) * 0.5));
+
+        this.game.time.events.add(Phaser.Timer.SECOND, () => {
+            if (CardUtil.countCards(this.dealer.cards) === 21) {
+                this.notificationsText.setText("DEALER HAS BLACKJACK", true);
+                this.showDealersSecondCard();
+                this.player.balance += _.floor((TokenUtil.convertTokensToAmount(this.currentBet) / 3) * 2);
+
+                this.startNewRoundButton.visible = true;
+            } else {
+                this.notificationsText.setText("DEALER DON'T HAVE BLACKJACK", true);
+                this.actionButtons.visible = true;
+                this.updateBet(-(TokenUtil.convertTokensToAmount(this.currentBet) / 3));
+
+                console.log(this.currentBet);
+            }
+            this.notificationsText.visible = true;
+            this.game.time.events.add(Phaser.Timer.SECOND * 3, () => {
+                this.notificationsText.setText("", true);
+                this.notificationsText.visible = false;
+            });
+        });
+
+    }
+
+    showDealersSecondCard() {
+        this.dealerCardsGroup.getChildAt(1).destroy();
+        this.dealCardSound.play();
+        this.dealerCardsGroup.add(
+            this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[1])));
+        this.updateDealerCardCount();
     }
 
     updateBet(amount: number) {
-        if (this.isBetPossible(amount)) {
-            this.currentBet = this.currentBet.concat(new Token(amount));
+        if (this.isBetPossible(amount) && amount >= 0) {
+            this.currentBet = _.concat(this.currentBet, TokenUtil.convertAmountToTokens(amount));
             this.player.balance -= amount;
 
             this.updateBalanceAndBetText();
             this.colorTokenButtonsRed();
             this.tokenSelectSound.play();
         }
+
+        if(amount < 0) {
+            _.forEach(TokenUtil.convertAmountToTokens(Math.abs(amount)), (tokenToRemove) => {
+                let removeIndex = _.findIndex(this.currentBet, (token) => {token.value === tokenToRemove.value});
+                this.currentBet.splice(removeIndex, 1);
+            });
+            this.updateBalanceAndBetText();
+        }
+
     }
 
     updateBalanceAndBetText() {
@@ -398,8 +437,8 @@ export class Main extends Phaser.State {
                         this.player.balance += TokenUtil.convertTokensToAmount(this.currentBet) * 2;
                     }
                 } else {
-                        notification = "You won!";
-                        this.player.balance += TokenUtil.convertTokensToAmount(this.currentBet) * 2;
+                    notification = "You won!";
+                    this.player.balance += TokenUtil.convertTokensToAmount(this.currentBet) * 2;
                 }
                 this.notificationsText.setText(notification, true);
                 this.notificationsText.visible = true;
@@ -435,7 +474,7 @@ export class Main extends Phaser.State {
 
     reinitializeGame() {
         this.clickButtonSound.play();
-        if(this.player.balance > 0) {
+        if (this.player.balance > 0) {
             this.dealButton.visible = true;
             this.colorTokenButtonsRed();
             this.tokenButtons.visible = true;
