@@ -10,7 +10,7 @@ export class TokenUtil {
     public static convertAmountToTokens(amount: number): Token[] {
         let tokenAmount = TokenValues.length - 1;
         let tokens: Token[] = [];
-        while (tokenAmount > 0) {
+        while (tokenAmount >= 0) {
             _.times(Math.floor(amount/ TokenValues[tokenAmount]), () => {
                 tokens = tokens.concat(new Token(TokenValues[tokenAmount]));
             });

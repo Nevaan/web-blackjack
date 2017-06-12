@@ -6,7 +6,6 @@ import {TokenUtil} from "../util/TokenUtil";
 import * as _ from "lodash";
 import {CardUtil} from "../util/CardUtil";
 import {Dealer} from "../model/Dealer";
-import {Card} from "../model/Card";
 
 export class Main extends Phaser.State {
 
@@ -126,6 +125,7 @@ export class Main extends Phaser.State {
         this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 180, "DEAL", this.textStyle);
         this.dealButton.inputEnabled = true;
         this.dealButton.anchor.setTo(0);
+        this.dealButton.fill = "#8B0000";
         this.dealButton.events.onInputDown.add(this.onDealAction, this);
 
         this.notificationsText = this.game.add.text(this.game.world.width / 2, 15, "", this.textStyle);
@@ -302,8 +302,6 @@ export class Main extends Phaser.State {
                 this.notificationsText.setText("DEALER DON'T HAVE BLACKJACK", true);
                 this.actionButtons.visible = true;
                 this.updateBet(-(TokenUtil.convertTokensToAmount(this.currentBet) / 3));
-
-                console.log(this.currentBet);
             }
             this.notificationsText.visible = true;
             this.game.time.events.add(Phaser.Timer.SECOND * 3, () => {
@@ -329,6 +327,7 @@ export class Main extends Phaser.State {
 
             this.updateBalanceAndBetText();
             this.colorTokenButtonsRed();
+            this.dealButton.fill = "#daa520";
             this.tokenSelectSound.play();
         }
 
@@ -500,6 +499,7 @@ export class Main extends Phaser.State {
             this.notificationsText.visible = true;
             this.notificationsText.fill = "#8B0000";
         }
+        this.dealButton.fill = "#8B0000";
     }
 
 }
