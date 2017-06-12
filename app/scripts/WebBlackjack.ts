@@ -15,7 +15,8 @@ class WebBlackjack {
 
         this.game.global = {
             startingBalance: 1000,
-            muted: false
+            muted: false,
+            deckAmount: 1
         }
 
         this.game.state.add('boot', Boot, false);

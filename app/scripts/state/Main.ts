@@ -82,6 +82,7 @@ export class Main extends Phaser.State {
         this.cardDeck.angle -= 90;
         this.game.add.sprite(this.game.world.width - 157, 153, 'cardBack').angle -= 90;
         this.game.add.sprite(this.game.world.width - 154, 156, 'cardBack').angle -= 90;
+        this.game.add.sprite(0, this.game.height - 180, 'actions-background');
 
         this.playerCardsGroup = this.game.add.group();
         this.dealerCardsGroup = this.game.add.group();
@@ -122,7 +123,7 @@ export class Main extends Phaser.State {
         this.dealerCardCount.anchor.setTo(0);
         this.dealerCardCount.visible = false;
 
-        this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 180, "DEAL", this.textStyle);
+        this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 170, "DEAL", this.textStyle);
         this.dealButton.inputEnabled = true;
         this.dealButton.anchor.setTo(0);
         this.dealButton.fill = "#8B0000";
@@ -136,38 +137,38 @@ export class Main extends Phaser.State {
 
     //TODO: replace with real buttons
     createTokenButtons() {
-        this.oneTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 180, "1$", this.textStyle, this.tokenButtons);
+        this.oneTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 170, "1$", this.textStyle, this.tokenButtons);
         this.oneTokenButton.anchor.setTo(0);
         this.oneTokenButton.inputEnabled = true;
         this.oneTokenButton.events.onInputDown.add(() => this.updateBet(1), this);
 
 
-        this.fiveTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 130, "5$", this.textStyle, this.tokenButtons);
+        this.fiveTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 120, "5$", this.textStyle, this.tokenButtons);
         this.fiveTokenButton.anchor.setTo(0);
         this.fiveTokenButton.inputEnabled = true;
         this.fiveTokenButton.events.onInputDown.add(() => this.updateBet(5), this);
 
-        this.tenTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 80, "10$", this.textStyle, this.tokenButtons);
+        this.tenTokenButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 70, "10$", this.textStyle, this.tokenButtons);
         this.tenTokenButton.anchor.setTo(0);
         this.tenTokenButton.inputEnabled = true;
         this.tenTokenButton.events.onInputDown.add(() => this.updateBet(10), this);
 
-        this.twentyFiveTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 180, "25$", this.textStyle, this.tokenButtons);
+        this.twentyFiveTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 170, "25$", this.textStyle, this.tokenButtons);
         this.twentyFiveTokenButton.anchor.setTo(0);
         this.twentyFiveTokenButton.inputEnabled = true;
         this.twentyFiveTokenButton.events.onInputDown.add(() => this.updateBet(25), this);
 
-        this.fiftyTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 130, "50$", this.textStyle, this.tokenButtons);
+        this.fiftyTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 120, "50$", this.textStyle, this.tokenButtons);
         this.fiftyTokenButton.anchor.setTo(0);
         this.fiftyTokenButton.inputEnabled = true;
         this.fiftyTokenButton.events.onInputDown.add(() => this.updateBet(50), this);
 
-        this.hundredTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 80, "100$", this.textStyle, this.tokenButtons);
+        this.hundredTokenButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 70, "100$", this.textStyle, this.tokenButtons);
         this.hundredTokenButton.anchor.setTo(0);
         this.hundredTokenButton.inputEnabled = true;
         this.hundredTokenButton.events.onInputDown.add(() => this.updateBet(100), this);
 
-        this.fiveHundredTokenButton = this.game.add.text(this.game.world.width / 2, this.game.world.height - 180, "500$", this.textStyle, this.tokenButtons);
+        this.fiveHundredTokenButton = this.game.add.text(this.game.world.width / 2, this.game.world.height - 170, "500$", this.textStyle, this.tokenButtons);
         this.fiveHundredTokenButton.anchor.setTo(0);
         this.fiveHundredTokenButton.inputEnabled = true;
         this.fiveHundredTokenButton.events.onInputDown.add(() => this.updateBet(500), this);
@@ -176,7 +177,7 @@ export class Main extends Phaser.State {
 
     createActionButtons() {
 
-        this.hitButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 180, "Hit", this.textStyle, this.actionButtons);
+        this.hitButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 170, "Hit", this.textStyle, this.actionButtons);
         this.hitButton.anchor.setTo(0);
         this.hitButton.inputEnabled = true;
         this.hitButton.events.onInputDown.add(() => {
@@ -184,7 +185,7 @@ export class Main extends Phaser.State {
         }, this);
         this.hitButton.visible = false;
 
-        this.standButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 130, "Stand", this.textStyle, this.actionButtons);
+        this.standButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 120, "Stand", this.textStyle, this.actionButtons);
         this.standButton.anchor.setTo(0);
         this.standButton.inputEnabled = true;
         this.standButton.events.onInputDown.add(() => {
@@ -193,7 +194,7 @@ export class Main extends Phaser.State {
         this.standButton.visible = false;
 
 
-        this.doubleBetButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 80, "Double", this.textStyle, this.actionButtons);
+        this.doubleBetButton = this.game.add.text(this.game.world.width / 10, this.game.world.height - 70, "Double", this.textStyle, this.actionButtons);
         this.doubleBetButton.anchor.setTo(0);
         this.doubleBetButton.inputEnabled = true;
         this.doubleBetButton.events.onInputDown.add(() => {
@@ -202,7 +203,7 @@ export class Main extends Phaser.State {
         this.doubleBetButton.visible = false;
 
 
-        this.splitButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 180, "Split", this.textStyle, this.actionButtons);
+        this.splitButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 170, "Split", this.textStyle, this.actionButtons);
         this.splitButton.anchor.setTo(0);
         this.splitButton.inputEnabled = true;
         this.splitButton.events.onInputDown.add(() => {
@@ -211,7 +212,7 @@ export class Main extends Phaser.State {
         this.splitButton.visible = false;
 
 
-        this.insuranceButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 130, "Insurance", this.textStyle, this.actionButtons);
+        this.insuranceButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 120, "Insurance", this.textStyle, this.actionButtons);
         this.insuranceButton.anchor.setTo(0);
         this.insuranceButton.inputEnabled = true;
         this.insuranceButton.events.onInputDown.add(() => {
@@ -219,7 +220,7 @@ export class Main extends Phaser.State {
         }, this);
         this.insuranceButton.visible = false;
 
-        this.startNewRoundButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 130, "Start new round", this.textStyle);
+        this.startNewRoundButton = this.game.add.text(this.game.world.width / 4, this.game.world.height - 120, "Start new round", this.textStyle);
         this.startNewRoundButton.anchor.setTo(0);
         this.startNewRoundButton.inputEnabled = true;
         this.startNewRoundButton.events.onInputDown.add(() => {

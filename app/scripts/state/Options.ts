@@ -18,9 +18,13 @@ export class Options extends Phaser.State {
     private soundOptionHeader: Phaser.Text;
     private soundOn: Phaser.Text;
     private soundOff: Phaser.Text;
-    private textStyling = {
 
-    };
+
+    private deckAmountOption: Phaser.Text;
+    private addDeckText: Phaser.Text;
+    private deckAmountText: Phaser.Text;
+    private subtractDeckText: Phaser.Text;
+
     constructor() {
         super();
     }
@@ -51,8 +55,37 @@ export class Options extends Phaser.State {
             align: "center"
         });
 
-        this.fiveHundredText = this.game.add.text(100, 230, "$500", {
+        this.deckAmountOption = this.game.add.text(this.game.world.width / 10, 380, "Deck amount",{
+            font: "30px bree",
+            fill: "#daa520",
+            align: "center"
+        });
+        this.deckAmountOption.anchor.set(0);
+
+        this.subtractDeckText = this.game.add.text(100, 420, "-", {
             font: "25px bree",
+            fill: "#daa520",
+            align: "center"
+        });
+        this.subtractDeckText.anchor.set(0);
+
+        this.deckAmountText = this.game.add.text(130, 420, this.game.global.deckAmount, {
+            font: "30px bree",
+            fill: "#daa520",
+            align: "center"
+        });
+        this.deckAmountText.anchor.set(0);
+
+        this.addDeckText = this.game.add.text(160, 420, "+", {
+            font: "25px bree",
+            fill: "#daa520",
+            align: "center"
+        });
+        this.addDeckText.anchor.set(0);
+
+
+        this.fiveHundredText = this.game.add.text(100, 230, "$500", {
+            font: "30px bree",
             fill: "#8B0000",
             align: "center"
         }, this.startingBalanceTextOptions);
@@ -92,6 +125,24 @@ export class Options extends Phaser.State {
         this.fiveKText.inputEnabled = true;
         this.soundOn.inputEnabled = true;
         this.soundOff.inputEnabled = true;
+
+        this.addDeckText.inputEnabled = true;
+        this.subtractDeckText.inputEnabled = true;
+
+        this.addDeckText.events.onInputDown.add(() => {
+            if(this.game.global.deckAmount < 5) {
+                this.game.global.deckAmount += 1;
+                this.deckAmountText.setText(this.game.global.deckAmount, true);
+            }
+
+        });
+
+        this.subtractDeckText.events.onInputDown.add(() => {
+            if(this.game.global.deckAmount > 1) {
+                this.game.global.deckAmount -= 1;
+                this.deckAmountText.setText(this.game.global.deckAmount, true);
+            }
+        });
 
         this.fiveHundredText.events.onInputDown.add(() => this.setStartingBalance(500, this.fiveHundredText), true);
         this.oneKText.events.onInputDown.add(() => this.setStartingBalance(1000, this.oneKText), true);
