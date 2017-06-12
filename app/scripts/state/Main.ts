@@ -24,7 +24,7 @@ export class Main extends Phaser.State {
     private currentBetText: Phaser.Text;
     private playerCardCount: Phaser.Text;
     private dealerCardCount: Phaser.Text;
-
+    private notificationsText: Phaser.Text;
 
     private tokenButtons: Phaser.Group;
     private actionButtons: Phaser.Group;
@@ -105,14 +105,18 @@ export class Main extends Phaser.State {
         this.playerCardCount.anchor.setTo(0);
         this.playerCardCount.visible = false;
 
-        this.dealerCardCount = this.game.add.text(50, this.game.world.height - 240, "Dealer: " + CardUtil.countCards(this.dealer.cards), this.textStyle);
+        this.dealerCardCount = this.game.add.text(50, this.game.world.height - 240, "Dealer: " + "", this.textStyle);
         this.dealerCardCount.anchor.setTo(0);
         this.dealerCardCount.visible = false;
 
         this.dealButton = this.game.add.text(this.game.world.width - 280, this.game.world.height - 180, "DEAL", this.textStyle);
         this.dealButton.inputEnabled = true;
-        this.dealButton.anchor.set(0);
+        this.dealButton.anchor.setTo(0);
         this.dealButton.events.onInputDown.add(this.onDealAction, this);
+
+        this.notificationsText = this.game.add.text(this.game.world.width / 2, 15, "", this.textStyle);
+        this.notificationsText.anchor.setTo(0.5, 0);
+        this.notificationsText.visible = false;
 
     }
 
@@ -205,7 +209,7 @@ export class Main extends Phaser.State {
         this.startNewRoundButton.anchor.setTo(0);
         this.startNewRoundButton.inputEnabled = true;
         this.startNewRoundButton.events.onInputDown.add(() => {
-            this.reinitializeGame(false);
+            this.reinitializeGame();
         }, this);
         this.startNewRoundButton.visible = false;
     }
@@ -240,15 +244,12 @@ export class Main extends Phaser.State {
 
     stand() {
         this.actionButtons.visible = false;
-        /*
-         TODO: insert dealer play
-         */
+        this.updateDealerCardCount();
         this.game.time.events.add(Phaser.Timer.SECOND, () => {
             this.dealerCardsGroup.getChildAt(1).destroy();
+
             this.dealerCardsGroup.add(
                 this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[1])));
-
-            console.log(this.dealerCardsGroup);
 
             this.dealerPlay();
         });
@@ -320,11 +321,12 @@ export class Main extends Phaser.State {
             );
 
             this.playerCardCount.visible = true;
+            this.dealerCardCount.setText("Dealer: " + CardUtil.countCards(this.dealer.cards[0]), true);
             this.dealerCardCount.visible = true;
             this.showActionButtons();
             this.actionButtons.visible = true;
             this.updatePlayerCardCount();
-            this.updateDealerCardCount();
+            //this.updateDealerCardCount();
         }
     }
 
@@ -347,12 +349,38 @@ export class Main extends Phaser.State {
     }
 
     dealerPlay() {
-        if (CardUtil.countCards(this.dealer.cards) <= 16) {
-            this.game.time.events.add(Phaser.Timer.SECOND, () => {
+        this.game.time.events.add(Phaser.Timer.SECOND, () => {
+            if (CardUtil.countCards(this.dealer.cards) <= 16) {
                 this.addCardForDealer();
                 this.dealerPlay();
-            });
-        }
+            } else {
+                let notification: string = "";
+                let playerScore = CardUtil.countCards(this.player.cards);
+                let dealerScore = CardUtil.countCards(this.dealer.cards);
+                if (dealerScore <= 21) {
+                    if (playerScore < dealerScore) {
+                        notification = "You lost!";
+                    }
+
+                    if (playerScore == dealerScore) {
+                        notification = "Draw";
+                        this.player.balance += TokenUtil.convertTokensToAmount(this.currentBet);
+                    }
+
+                    if (playerScore > dealerScore) {
+                        notification = "You won!";
+                        this.player.balance += TokenUtil.convertTokensToAmount(this.currentBet) * 2;
+                    }
+                } else {
+                        notification = "You won!";
+                        this.player.balance += TokenUtil.convertTokensToAmount(this.currentBet) * 2;
+                }
+                this.notificationsText.setText(notification, true);
+                this.notificationsText.visible = true;
+
+                this.startNewRoundButton.visible = true;
+            }
+        });
     }
 
     updatePlayerCardCount() {
@@ -373,31 +401,38 @@ export class Main extends Phaser.State {
             let elementAmount = _.replace(element.text, '$', '');
             if (_.parseInt(elementAmount) > this.player.balance) {
                 element.fill = "#8B0000";
+            } else {
+                element.fill = "#daa520";
             }
         })
     }
 
-    reinitializeGame(result: boolean) {
-        this.dealButton.visible = true;
-        this.colorTokenButtonsRed();
-        this.tokenButtons.visible = true;
-        this.startNewRoundButton.visible = false;
+    reinitializeGame() {
+        if(this.player.balance > 0) {
+            this.dealButton.visible = true;
+            this.colorTokenButtonsRed();
+            this.tokenButtons.visible = true;
+            this.startNewRoundButton.visible = false;
+            this.notificationsText.setText("", true);
+            this.notificationsText.visible = false;
 
-        this.currentBet = [];
-        this.playerCardsGroup.destroy();
-        this.dealerCardsGroup.destroy();
-        this.playerCardsGroup = this.game.add.group();
-        this.dealerCardsGroup = this.game.add.group();
+            this.currentBet = [];
+            this.playerCardsGroup.destroy();
+            this.dealerCardsGroup.destroy();
+            this.playerCardsGroup = this.game.add.group();
+            this.dealerCardsGroup = this.game.add.group();
 
-        this.player.cards = [];
-        this.dealer.cards = [];
+            this.player.cards = [];
+            this.dealer.cards = [];
 
-        this.updatePlayerCardCount();
-        this.updateDealerCardCount();
-        this.updateBalanceAndBetText();
-
-        if (!result) {
-
+            this.updatePlayerCardCount();
+            this.updateDealerCardCount();
+            this.updateBalanceAndBetText();
+        } else {
+            this.startNewRoundButton.visible = false;
+            this.notificationsText.setText("YOU LOST ALL THE MONEY!", true);
+            this.notificationsText.visible = true;
+            this.notificationsText.fill = "#8B0000";
         }
     }
 
