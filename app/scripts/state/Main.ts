@@ -51,6 +51,11 @@ export class Main extends Phaser.State {
     private insuranceButton: Phaser.Text;
     private startNewRoundButton: Phaser.Text;
 
+    //audio
+    private tokenSelectSound;
+    private dealCardSound;
+    private clickButtonSound;
+
     private textStyle;
 
     constructor() {
@@ -83,11 +88,19 @@ export class Main extends Phaser.State {
         this.tokenButtons = this.game.add.group();
         this.actionButtons = this.game.add.group();
 
+        this.tokenSelectSound = this.game.add.audio('token_select');
+        this.dealCardSound = this.game.add.audio('deal_card');
+        this.clickButtonSound = this.game.add.audio('click_button');
+
 
         this.backButton = this.game.add.button(20, 15, 'backButton', this.backToMenu, this, 2, 1, 0);
-        this.createTokenButtons();
+
+        this.game.sound.setDecodedCallback([ this.tokenSelectSound, this.dealCardSound, this.clickButtonSound ], this.createTokenButtons, this);
+
         this.createText();
         this.createActionButtons();
+
+
     }
 
     backToMenu() {
@@ -235,6 +248,9 @@ export class Main extends Phaser.State {
     }
 
     hit() {
+        this.doubleBetButton.visible = false;
+        this.splitButton.visible = false;
+
         this.addCardForPlayer();
 
         if (CardUtil.countCards(this.player.cards) > 21) {
@@ -244,13 +260,14 @@ export class Main extends Phaser.State {
 
     stand() {
         this.actionButtons.visible = false;
-        this.updateDealerCardCount();
+        this.clickButtonSound.play();
+
         this.game.time.events.add(Phaser.Timer.SECOND, () => {
             this.dealerCardsGroup.getChildAt(1).destroy();
-
+            this.dealCardSound.play();
             this.dealerCardsGroup.add(
                 this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[1])));
-
+            this.updateDealerCardCount();
             this.dealerPlay();
         });
     }
@@ -258,10 +275,11 @@ export class Main extends Phaser.State {
     double() {
         this.updateBet(TokenUtil.convertTokensToAmount(this.currentBet));
         this.addCardForPlayer();
-        this.actionButtons.visible = false;
-        /*
-         TODO: insert dealer play
-         */
+        if(CardUtil.countCards(this.player.cards) <= 21) {
+            this.stand();
+        } else {
+            this.gameLost();
+        }
     }
 
     split() {
@@ -271,8 +289,7 @@ export class Main extends Phaser.State {
     insurance() {
         //todo: reset on round end
         this.betInsured = true;
-
-
+        this.updateBet(_.floor(TokenUtil.convertTokensToAmount(this.currentBet) * 0.5));
     }
 
     updateBet(amount: number) {
@@ -282,6 +299,7 @@ export class Main extends Phaser.State {
 
             this.updateBalanceAndBetText();
             this.colorTokenButtonsRed();
+            this.tokenSelectSound.play();
         }
     }
 
@@ -296,6 +314,8 @@ export class Main extends Phaser.State {
 
     onDealAction() {
         if (!_.isEmpty(this.currentBet)) {
+            this.clickButtonSound.play();
+
             this.dealButton.visible = false;
             this.tokenButtons.visible = false;
 
@@ -305,27 +325,31 @@ export class Main extends Phaser.State {
             this.dealer.addCard(this.cardSet.drawCard());
             this.dealer.addCard(this.cardSet.drawCard());
 
-            this.playerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2 - 20, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[0]))
-            );
+            this.game.time.events.add(Phaser.Timer.SECOND * 0.5, () => {
+                this.dealCardSound.play();
 
-            this.playerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[1]))
-            );
+                this.playerCardsGroup.add(
+                    this.game.add.sprite(this.game.world.width / 2 - 20, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[0]))
+                );
 
-            this.dealerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2 - 20, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[0]))
-            );
-            this.dealerCardsGroup.add(
-                this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, 'cardBack')
-            );
+                this.playerCardsGroup.add(
+                    this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[1]))
+                );
 
-            this.playerCardCount.visible = true;
-            this.dealerCardCount.setText("Dealer: " + CardUtil.countCards(this.dealer.cards[0]), true);
-            this.dealerCardCount.visible = true;
-            this.showActionButtons();
-            this.actionButtons.visible = true;
-            this.updatePlayerCardCount();
+                this.dealerCardsGroup.add(
+                    this.game.add.sprite(this.game.world.width / 2 - 20, this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[0]))
+                );
+                this.dealerCardsGroup.add(
+                    this.game.add.sprite(this.game.world.width / 2, this.game.world.height / 2 - 225, 'cardBack')
+                );
+
+                this.playerCardCount.visible = true;
+                this.dealerCardCount.setText("Dealer: " + CardUtil.countCards(this.dealer.cards[0]), true);
+                this.dealerCardCount.visible = true;
+                this.showActionButtons();
+                this.actionButtons.visible = true;
+                this.updatePlayerCardCount();
+            });
             //this.updateDealerCardCount();
         }
     }
@@ -333,6 +357,7 @@ export class Main extends Phaser.State {
     addCardForPlayer() {
         this.player.addCard(this.cardSet.drawCard());
         this.playerCardsGroup.left -= 20;
+        this.dealCardSound.play();
         this.playerCardsGroup.add(
             this.game.add.sprite(this.game.world.width / 2 + ((this.playerCardsGroup.length - 1) * 20), this.game.world.height / 2 - 50, CardUtil.getCardSpriteName(this.player.cards[this.playerCardsGroup.length]))
         );
@@ -342,6 +367,7 @@ export class Main extends Phaser.State {
     addCardForDealer() {
         this.dealer.addCard(this.cardSet.drawCard());
         this.dealerCardsGroup.left -= 20;
+        this.dealCardSound.play();
         this.dealerCardsGroup.add(
             this.game.add.sprite(this.game.world.width / 2 + ((this.dealerCardsGroup.length - 1) * 20), this.game.world.height / 2 - 225, CardUtil.getCardSpriteName(this.dealer.cards[this.dealerCardsGroup.length]))
         );
@@ -408,6 +434,7 @@ export class Main extends Phaser.State {
     }
 
     reinitializeGame() {
+        this.clickButtonSound.play();
         if(this.player.balance > 0) {
             this.dealButton.visible = true;
             this.colorTokenButtonsRed();

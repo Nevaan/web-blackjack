@@ -75,9 +75,15 @@ export class Preload extends Phaser.State {
         this.game.load.image('hearts_jack', 'assets/images/cards/hearts_jack.png', 72, 100);
         this.game.load.image('hearts_queen', 'assets/images/cards/hearts_queen.png', 72, 100);
         this.game.load.image('hearts_king', 'assets/images/cards/hearts_king.png', 72, 100);
+
+        this.game.load.audio('token_select', 'assets/audio/token_sound.mp3');
+        this.game.load.audio('deal_card', 'assets/audio/deal_card.wav');
+        this.game.load.audio('click_button', 'assets/audio/switch.mp3');
+
+        this.game.sound.mute = this.game.global.muted;
     }
 
     create() {
-            this.game.state.start('menu');
+        this.game.state.start('menu');
     }
 }

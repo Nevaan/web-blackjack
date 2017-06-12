@@ -11,6 +11,7 @@ app.use(express.static(appPath));
 app.use("/styles", express.static(appPath + '/styles'));
 app.use("/images", express.static(appPath + '/assets/images'));
 app.use("/fonts", express.static(appPath + '/assets/fonts'));
+app.use("/audio", express.static(appPath + '/assets/audio'));
 app.use("/scripts", express.static(appPath + '/js'));
 
 app.get('/', function (req, res) {
